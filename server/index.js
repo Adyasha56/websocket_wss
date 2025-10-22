@@ -1,13 +1,11 @@
 import express from "express";
 import { WebSocketServer } from "ws";
 import dotenv from "dotenv";
-import path from "path";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 8080;
-
 
 const serverInstance = app.listen(PORT, () => {
   console.log(`Server is listening on ${PORT}`);
@@ -25,6 +23,6 @@ wss.on("connection", (ws) => {
   });
 
   ws.on("close", () => {
-    console.log("Client disconnected ");
+    console.log("Client disconnected");
   });
 });
