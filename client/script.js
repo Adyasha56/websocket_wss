@@ -1,4 +1,4 @@
-const socket = new WebSocket("wss://websocket-chat-server.onrender.com");
+const socket = new WebSocket("wss://websocket-wss-pfzh.onrender.com/");
 
 const messagesDiv = document.getElementById("messages");
 const input = document.getElementById("msgInput");
