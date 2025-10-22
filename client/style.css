@@ -1,0 +1,82 @@
+/* styles.css */
+:root{
+  --bg: #121212;
+  --panel: #1e1e1e;
+  --border: #444;
+  --muted: #aaa;
+  --accent: #0078ff;
+}
+
+*{box-sizing:border-box}
+html,body{
+  height:100%;
+  margin:0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: #eee;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+body{
+  flex-direction:column;
+}
+
+h2{
+  margin:0 0 12px;
+  font-size:20px;
+  font-weight:600;
+}
+
+#messages{
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px;
+  width:320px;
+  height:300px;
+  overflow-y:auto;
+  margin-bottom:12px;
+  background:var(--panel);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+}
+
+.controls{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+input#msgInput{
+  padding:8px;
+  width:220px;
+  border-radius:6px;
+  border:1px solid #555;
+  background:#2a2a2a;
+  color:#fff;
+  outline:none;
+}
+
+input#msgInput::placeholder{
+  color:var(--muted);
+}
+
+button#sendBtn{
+  padding:8px 12px;
+  border:none;
+  border-radius:6px;
+  background:var(--accent);
+  color:#fff;
+  cursor:pointer;
+}
+
+button#sendBtn:hover{
+  filter:brightness(0.92);
+}
+
+/* small responsive tweak */
+@media(max-width:420px){
+  #messages{width:92vw}
+  input#msgInput{width:60vw}
+}
