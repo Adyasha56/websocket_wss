@@ -21,12 +21,12 @@ button.addEventListener("click", () => {
 
   if (socket.readyState === WebSocket.OPEN) {
     socket.send(msg);
-    appendMessage("🙋 You: " + msg);
+    appendMessage(" You: " + msg);
     input.value = "";
   } else if (socket.readyState === WebSocket.CONNECTING) {
-    appendMessage("⚠️ Connection still opening, please wait...");
+    appendMessage("Connection still opening, please wait...");
   } else {
-    appendMessage("❌ WebSocket not connected");
+    appendMessage(" WebSocket not connected");
   }
 });
 
