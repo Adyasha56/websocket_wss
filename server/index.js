@@ -8,8 +8,6 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// Serve client folder
-app.use(express.static(path.resolve('../client')));
 
 const serverInstance = app.listen(PORT, () => {
   console.log(`Server is listening on ${PORT}`);
