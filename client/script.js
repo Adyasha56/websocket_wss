@@ -1,4 +1,5 @@
-const socket = new WebSocket("ws://localhost:8080");
+const socket = new WebSocket("wss://websocket-chat-server.onrender.com");
+
 
 const messagesDiv = document.getElementById("messages");
 const input = document.getElementById("msgInput");
