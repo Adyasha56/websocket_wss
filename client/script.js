@@ -1,38 +1,34 @@
-const socket = new WebSocket("wss://websocket-wss-pfzh.onrender.com/");
+// Ask name & room (so you and friend can share same room)
+const sender = prompt("Enter your name:");
+const room = prompt("Enter room name to join:");
+
+// Connect to backend WebSocket (use your Render URL!)
+const socket = new WebSocket(`wss://websocket-wss-pfzh.onrender.com?room=${room}`);
 
 const messagesDiv = document.getElementById("messages");
 const input = document.getElementById("msgInput");
 const button = document.getElementById("sendBtn");
 
-// Connection opened
 socket.addEventListener("open", () => {
   appendMessage("✅ Connected to server");
 });
 
-// Receiving messages from server
 socket.addEventListener("message", (event) => {
-  appendMessage("🖥️ Server: " + event.data);
+  const { sender, message } = JSON.parse(event.data);
+  appendMessage(`💬 ${sender}: ${message}`);
 });
 
-// Send message only if connection is open
 button.addEventListener("click", () => {
-  const msg = input.value.trim();
-  if (!msg) return;
+  const message = input.value.trim();
+  if (!message) return;
 
-  if (socket.readyState === WebSocket.OPEN) {
-    socket.send(msg);
-    appendMessage(" You: " + msg);
-    input.value = "";
-  } else if (socket.readyState === WebSocket.CONNECTING) {
-    appendMessage("Connection still opening, please wait...");
-  } else {
-    appendMessage(" WebSocket not connected");
-  }
+  socket.send(JSON.stringify({ sender, message }));
+  input.value = "";
 });
 
-function appendMessage(message) {
+function appendMessage(msg) {
   const p = document.createElement("p");
-  p.textContent = message;
+  p.textContent = msg;
   messagesDiv.appendChild(p);
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
