@@ -7,6 +7,10 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+app.get("/", (req, res) => {
+  res.send("WebSocket server is running");
+});
+
 const serverInstance = app.listen(PORT, () => {
   console.log(`Server is listening on ${PORT}`);
 });
