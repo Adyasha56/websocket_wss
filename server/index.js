@@ -15,69 +15,88 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 8080;
 
-// MongoDB connection
-mongoose.connect(process.env.MONGO_URI)
+//Connect MongoDB Atlas
+mongoose
+  .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
-  .catch(err => console.error("MongoDB connection error:", err));
+  .catch((err) => console.error("MongoDB connection error:", err));
 
-// HTTP server
+
 const server = http.createServer(app);
 
-// WebSocket server
 const wss = new WebSocketServer({ server });
 
-// Room connections: { roomId: [ws1, ws2] }
+// Store clients per room
 const rooms = {};
 
-// WebSocket connection
+//WebSocket connection handler
 wss.on("connection", (ws, req) => {
   const params = new URLSearchParams(req.url.replace("/?", ""));
   const roomId = params.get("room");
+  const sender = params.get("user");
+
+  // Validate room and user
+  if (!roomId || !sender) {
+    console.log("⚠️ Invalid connection — missing room or user");
+    ws.close();
+    return;
+  }
+
   if (!rooms[roomId]) rooms[roomId] = [];
   rooms[roomId].push(ws);
 
-  console.log(`Client joined room ${roomId}`);
+  console.log(`${sender} joined room ${roomId}`);
 
-  // Listen for messages
+  // When client sends message
   ws.on("message", async (messageData) => {
     try {
-      const data = JSON.parse(messageData); // { sender, message }
+      const data = JSON.parse(messageData);
 
-      // Save to MongoDB
+      //Save in MongoDB
       const msg = await Message.create({
         roomId,
         sender: data.sender,
-        text: data.message
+        text: data.message,
       });
 
-      // Broadcast to all clients in the same room
-      rooms[roomId].forEach(client => {
+      // Broadcast message to everyone in the same room
+      rooms[roomId].forEach((client) => {
         if (client.readyState === client.OPEN) {
-          client.send(JSON.stringify({ sender: msg.sender, message: msg.text }));
+          client.send(
+            JSON.stringify({ sender: msg.sender, message: msg.text })
+          );
         }
       });
-
     } catch (err) {
       console.error("Error saving/broadcasting message:", err);
     }
   });
 
+  //client disconnects
   ws.on("close", () => {
-    rooms[roomId] = rooms[roomId].filter(client => client !== ws);
-    console.log(`Client left room ${roomId}`);
+    rooms[roomId] = rooms[roomId].filter((client) => client !== ws);
+    console.log(`${sender} left room ${roomId}`);
   });
 });
 
-// Load previous messages
+//Fetch previous messages by room
 app.get("/messages/:roomId", async (req, res) => {
-  const msgs = await Message.find({ roomId: req.params.roomId }).sort("timestamp");
-  res.json(msgs);
+  try {
+    const msgs = await Message.find({ roomId: req.params.roomId }).sort(
+      "timestamp"
+    );
+    res.json(msgs);
+  } catch (err) {
+    res.status(500).json({ error: "Error fetching messages" });
+  }
 });
 
-// Simple health check
+
 app.get("/", (req, res) => {
-  res.send("WebSocket server is running");
+  res.send("WebSocket server is running 🚀");
 });
 
-// Start server
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+//Start server
+server.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
