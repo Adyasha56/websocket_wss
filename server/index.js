@@ -10,7 +10,14 @@ import { Message } from "./models/Message.js";
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://websocket-wss-eta.vercel.app"], // your frontend URL
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
+
 app.use(express.json());
 
 const PORT = process.env.PORT || 8080;
