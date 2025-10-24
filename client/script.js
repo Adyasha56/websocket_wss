@@ -1,18 +1,18 @@
-// client/script.js
+const BACKEND_URL = "https://websocket-wss-pfzh.onrender.com";
 const sender = prompt("Enter your name:");
 const room = prompt("Enter room name to join:");
 
-const socket = new WebSocket(`wss://websocket-wss-pfzh.onrender.com/?room=${room}&user=${sender}`);
-
+const socket = new WebSocket(`${BACKEND_URL.replace("https", "wss")}/?room=${room}&user=${sender}`);
 
 const messagesDiv = document.getElementById("messages");
 const input = document.getElementById("msgInput");
 const button = document.getElementById("sendBtn");
 
 // Load previous messages
-fetch(`https://websocket-wss-pfzh.onrender.com/messages/${room}`)
+fetch(`${BACKEND_URL}/messages/${room}`)
   .then(res => res.json())
   .then(data => {
+    messagesDiv.innerHTML = ""; // Clear any existing DOM messages
     data.forEach(m => appendMessage(`${m.sender}: ${m.text}`));
   });
 
