@@ -14,7 +14,6 @@ app.use(
   cors({
     origin: [
       "https://websocket-wss-eta.vercel.app", // frontend (Vercel)
-      "http://localhost:5173",                // local testing
     ],
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],
@@ -29,7 +28,7 @@ const PORT = process.env.PORT || 8080;
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB connected"))
-  .catch((err) => console.error("❌ MongoDB connection error:", err));
+  .catch((err) => console.error(" MongoDB connection error:", err));
 
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
@@ -42,7 +41,7 @@ wss.on("connection", (ws, req) => {
   const sender = params.get("user");
 
   if (!roomId || !sender) {
-    console.log("⚠️ Invalid connection — missing room or user");
+    console.log("Invalid connection — missing room or user");
     ws.close();
     return;
   }
@@ -56,7 +55,7 @@ wss.on("connection", (ws, req) => {
     try {
       const data = JSON.parse(messageData);
       if (!data.sender || !data.message) {
-        console.warn("⚠️ Invalid message data:", data);
+        console.warn("Invalid message data:", data);
         return;
       }
 
@@ -89,9 +88,6 @@ wss.on("connection", (ws, req) => {
 app.get("/messages/:roomId", async (req, res) => {
   try {
     const msgs = await Message.find({ roomId: req.params.roomId }).sort("timestamp");
-
-    // Uncomment if you want to clear old chats for fresh sessions
-    // await Message.deleteMany({ roomId: req.params.roomId });
 
     res.json(msgs);
   } catch (err) {
