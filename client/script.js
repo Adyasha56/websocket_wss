@@ -2,7 +2,8 @@
 const sender = prompt("Enter your name:");
 const room = prompt("Enter room name to join:");
 
-const socket = new WebSocket(`wss://websocket-wss-pfzh.onrender.com/?room=${room}`); //
+const socket = new WebSocket(`wss://websocket-wss-pfzh.onrender.com/?room=${room}&user=${sender}`);
+
 
 const messagesDiv = document.getElementById("messages");
 const input = document.getElementById("msgInput");
