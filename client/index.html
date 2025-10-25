@@ -8,11 +8,21 @@
 </head>
 <body>
   <h2>Lets Talk</h2>
+  
+  <!-- Room Info Display -->
+  <div id="roomInfo" style="display: none;">
+    <p>Room: <strong id="currentRoomName"></strong></p>
+    <p>User: <strong id="currentUserName"></strong></p>
+  </div>
+
   <div id="messages"></div>
+  
   <div class="controls">
     <input id="msgInput" type="text" placeholder="Type a message...">
     <button id="sendBtn">Send</button>
+    <button id="leaveBtn" class="leave-btn">Leave Room</button>
   </div>
+  
   <script src="./script.js"></script>
 </body>
 </html>
